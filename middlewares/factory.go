@@ -14,6 +14,8 @@ func Factory(t string, settings json.RawMessage) Middleware {
 		return requestID(settings)
 	case `rewrite_url`:
 		return rewriteUrl(settings)
+	case `compress`:
+		return compress(settings)
 	}
 	logrus.Fatalf("unknown middleware %s, exiting", t)
 	return nil

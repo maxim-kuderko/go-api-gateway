@@ -1,5 +1,8 @@
 {
   "default_middlewares": [{
+    "name": "compress",
+    "settings": {"level": 6}
+  },{
     "name": "request_id",
     "settings": {}
   }],
