@@ -1,0 +1,22 @@
+{
+  "global_middlewares": [{
+    "name": "request_id",
+    "settings": {}
+  }],
+  "routes": [
+    {
+      "origin": "localhost:3001",
+      "methods" : ["GET"],
+      "ingress_path": "/v1/my_service",
+      "middlewares": [
+        {
+          "name": "rewrite_url",
+          "settings": {
+            "from": "/v1/my_service",
+            "to": ""
+          }
+        }
+      ]
+    }
+  ]
+}
