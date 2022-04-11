@@ -1,5 +1,5 @@
 {
-  "global_middlewares": [{
+  "default_middlewares": [{
     "name": "request_id",
     "settings": {}
   }],
