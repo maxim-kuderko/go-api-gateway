@@ -9,14 +9,18 @@ import (
 type Middleware func(handler fasthttp.RequestHandler) fasthttp.RequestHandler
 
 func Factory(t string, settings json.RawMessage) Middleware {
+	var fn func(settings json.RawMessage) Middleware
 	switch t {
 	case `request_id`:
-		return requestID(settings)
+		fn = requestID
 	case `rewrite_url`:
-		return rewriteUrl(settings)
+		fn = rewriteUrl
 	case `compress`:
-		return compress(settings)
+		fn = compress
+	case `jwtAuth`:
+		fn = jwtAuth
+	default:
+		logrus.Fatalf("unknown middleware %s, exiting", t)
 	}
-	logrus.Fatalf("unknown middleware %s, exiting", t)
-	return nil
+	return fn(settings)
 }

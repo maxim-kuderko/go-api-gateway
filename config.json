@@ -1,15 +1,31 @@
 {
-  "default_middlewares": [{
-    "name": "compress",
-    "settings": {"level": 6}
-  },{
-    "name": "request_id",
-    "settings": {}
-  }],
+  "default_middlewares": [
+    {
+      "name": "compress",
+      "settings": {
+        "level": 6
+      }
+    },
+    {
+      "name": "request_id",
+      "settings": {}
+    },
+    {
+      "name": "jwtAuth",
+      "settings": {
+        "secret_env_var_name": "JWT_SECRET",
+        "token_format": "Custom",
+        "token_header": "x-access-token",
+        "parsed_token_header": "x-user"
+      }
+    }
+  ],
   "routes": [
     {
       "origin": "localhost:3001",
-      "methods" : ["GET"],
+      "methods": [
+        "GET"
+      ],
       "ingress_path": "/v1/my_service",
       "middlewares": [
         {
