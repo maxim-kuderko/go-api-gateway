@@ -1,0 +1,12 @@
+{
+  "default_middlewares": [],
+  "routes": [
+    {
+      "origin": "localhost:3001",
+      "methods": [
+        "GET"
+      ],
+      "ingress_path": "/v1/my_service"
+    }
+  ]
+}
