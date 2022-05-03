@@ -12,6 +12,7 @@ import (
 	"github.com/valyala/fasthttp"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type prometheusConfig struct {
@@ -31,11 +32,24 @@ func prometheusMonitor(cfg json.RawMessage) Middleware {
 		Name: "request_total",
 		Help: "The HTTP request counts processed.",
 	}, []string{"status_code", "method", "path"})
+	reqDuration := prometheus.NewHistogramVec(
+		prometheus.HistogramOpts{
+			Name:    "request_duration_seconds",
+			Help:    "The HTTP request duration in seconds.",
+			Buckets: config.HistogramBuckets,
+		},
+		[]string{"status_code", "method", "path"},
+	)
 
 	return func(handler fasthttp.RequestHandler) fasthttp.RequestHandler {
 		return func(ctx *fasthttp.RequestCtx) {
+			t := time.Now()
 			handler(ctx)
-			reqCounter.WithLabelValues(strconv.Itoa(ctx.Response.StatusCode()), strconv2.B2S(ctx.Request.Header.Method()), ctx.UserValue(router.MatchedRoutePathParam).(string)).Inc()
+			statusCode := strconv.Itoa(ctx.Response.StatusCode())
+			method := strconv2.B2S(ctx.Request.Header.Method())
+			route := ctx.UserValue(router.MatchedRoutePathParam).(string)
+			reqCounter.WithLabelValues(statusCode, method, route).Inc()
+			reqDuration.WithLabelValues(statusCode, method, route).Observe(time.Since(t).Seconds())
 		}
 	}
 }

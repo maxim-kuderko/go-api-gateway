@@ -15,6 +15,7 @@ func main() {
 		log.Println(http.ListenAndServe("localhost:6060", nil))
 	}()
 	app := fx.New(
+		fx.NopLogger,
 		fx.Provide(
 			initializers.NewConfig,
 			initializers.RouterConfig,

@@ -4,7 +4,8 @@
       "name": "prometheus",
       "settings": {
         "path": "/metrics",
-        "port": "8888"
+        "port": "8888",
+        "histogram_buckets": [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10, 15, 20, 30, 40, 50, 60]
       }
     },
     {
