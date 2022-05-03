@@ -34,7 +34,7 @@ func getHandler(v *viper.Viper, route *entities.Route, client *fasthttp.HostClie
 		resp := &ctx.Response
 		prepareRequest(ctx, route)
 		if err := client.Do(req, resp); err != nil {
-			logrus.Debug("error when proxying the request: %s", err)
+			logrus.Error("error when proxying the request: %s", err)
 			resp.SetStatusCode(504)
 			resp.SetBodyString(err.Error()) //todo: move to config
 		}

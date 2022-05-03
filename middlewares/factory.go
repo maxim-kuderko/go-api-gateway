@@ -19,6 +19,8 @@ func Factory(t string, settings json.RawMessage) Middleware {
 		fn = compress
 	case `jwtAuth`:
 		fn = jwtAuth
+	case `prometheus`:
+		fn = prometheusMonitor
 	default:
 		logrus.Fatalf("unknown middleware %s, exiting", t)
 	}

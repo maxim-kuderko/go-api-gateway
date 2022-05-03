@@ -9,6 +9,7 @@ import (
 
 func NewRouter(v *viper.Viper, cfg *entities.Config) *router.Router {
 	r := router.New()
+	r.SaveMatchedRoutePath = true
 	for _, route := range cfg.Routes {
 		for _, method := range route.Methods {
 			r.Handle(method, route.IngressPath, proxy.New(v, route, cfg))

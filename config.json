@@ -1,6 +1,13 @@
 {
   "default_middlewares": [
     {
+      "name": "prometheus",
+      "settings": {
+        "path": "/metrics",
+        "port": "8888"
+      }
+    },
+    {
       "name": "compress",
       "settings": {
         "level": 6
