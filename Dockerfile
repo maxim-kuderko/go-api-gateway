@@ -3,9 +3,9 @@ WORKDIR /application
 ADD go.* ./
 RUN go mod download
 ADD . .
-RUN  CGO_ENABLED=0 go build -o api .
+RUN  go build -o api .
 
-FROM scratch
+FROM debian
 WORKDIR /application/
 COPY --from=0 /application/api /application/api
 CMD ["/application/api"]
