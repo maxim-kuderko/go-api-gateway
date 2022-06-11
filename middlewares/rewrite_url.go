@@ -13,7 +13,7 @@ type RewriteRule struct {
 	To   string `json:"to"`
 }
 
-func rewriteUrl(cfg json.RawMessage) Middleware {
+func rewriteUrl(cfg json.RawMessage) func(handler fasthttp.RequestHandler) fasthttp.RequestHandler {
 	var rule *RewriteRule
 	if err := json.Unmarshal(cfg, &rule); err != nil {
 		logrus.Fatal(err)

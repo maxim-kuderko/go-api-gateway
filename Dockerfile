@@ -3,8 +3,7 @@ WORKDIR /application
 ADD go.* ./
 RUN go mod download
 ADD . .
-RUN  CGO_ENABLED=0 go build -o api main.go
-CMD ["./api"]
+RUN  CGO_ENABLED=0 go build -o api .
 
 FROM scratch
 WORKDIR /application/

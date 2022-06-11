@@ -10,7 +10,7 @@ type Compress struct {
 	Level int `json:"level"`
 }
 
-func compress(cfg json.RawMessage) Middleware {
+func compress(cfg json.RawMessage) func(handler fasthttp.RequestHandler) fasthttp.RequestHandler {
 	var config *Compress
 	if err := json.Unmarshal(cfg, &config); err != nil {
 		logrus.Fatal(err)

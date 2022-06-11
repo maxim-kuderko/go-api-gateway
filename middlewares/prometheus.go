@@ -20,7 +20,7 @@ type prometheusConfig struct {
 	HistogramBuckets []float64 `json:"histogram_buckets"`
 }
 
-func prometheusMonitor(cfg json.RawMessage) Middleware {
+func prometheusMonitor(cfg json.RawMessage) func(handler fasthttp.RequestHandler) fasthttp.RequestHandler {
 	var config *prometheusConfig
 	if err := json.Unmarshal(cfg, &config); err != nil {
 		logrus.Fatal(err)

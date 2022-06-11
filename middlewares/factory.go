@@ -6,18 +6,17 @@ import (
 	"github.com/valyala/fasthttp"
 	"os"
 	"plugin"
+	"reflect"
 )
 
-type Middleware func(handler fasthttp.RequestHandler) fasthttp.RequestHandler
-
-var registry = map[string]func(settings json.RawMessage) Middleware{}
+var registry = map[string]func(settings json.RawMessage) func(handler fasthttp.RequestHandler) fasthttp.RequestHandler{}
 
 func init() {
 	registerInternal()
 	registerExternal()
 }
 
-func Factory(t string, settings json.RawMessage) Middleware {
+func Factory(t string, settings json.RawMessage) func(handler fasthttp.RequestHandler) fasthttp.RequestHandler {
 	fn, ok := registry[t]
 	if !ok {
 		logrus.Fatalf("unknown middleware %s, exiting", t)
@@ -42,7 +41,7 @@ func registerExternal() {
 		logrus.Fatalf("error while reading plugins directory: %s", err.Error())
 	}
 	for _, entry := range dir {
-		pl, err := plugin.Open(entry.Name())
+		pl, err := plugin.Open(pluginsDir + `/` + entry.Name())
 		if err != nil {
 			logrus.Fatalf("error while openeing plugin %s, error: %s", entry.Name(), err.Error())
 		}
@@ -57,12 +56,12 @@ func registerExternal() {
 		}
 		name, ok := nm.(func() string)
 		if !ok {
-			logrus.Fatalf("error while calling Name function in plugin %s, error: %s", entry.Name(), err.Error())
+			logrus.Fatalf("error while calling Name function in plugin %s, error: %s", entry.Name(), reflect.TypeOf(nm))
 		}
 
-		middleware, ok := ml.(func(settings json.RawMessage) Middleware)
+		middleware, ok := ml.(func(settings json.RawMessage) func(handler fasthttp.RequestHandler) fasthttp.RequestHandler)
 		if !ok {
-			logrus.Fatalf("error while calling Middleware function in plugin %s, error: %s", entry.Name(), err.Error())
+			logrus.Fatalf("error while calling Middleware function in plugin %s, error: %s", entry.Name(), reflect.TypeOf(ml))
 		}
 		registry[name()] = middleware
 	}
