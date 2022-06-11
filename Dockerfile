@@ -1,10 +1,12 @@
-FROM golang:1 as builder
-WORKDIR /app
-COPY go.* ./
+FROM golang:1
+WORKDIR /application
+ADD go.* ./
 RUN go mod download
-COPY . .
-RUN go build -o api-gateway .
+ADD . .
+RUN  CGO_ENABLED=0 go build -o api main.go
+CMD ["./api"]
 
 FROM scratch
-COPY --from=builder /app/api-gateway /app/api-gateway
-CMD ["/app/api-gateway"]
+WORKDIR /application/
+COPY --from=0 /application/api /application/api
+CMD ["/application/api"]
