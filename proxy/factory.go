@@ -6,7 +6,6 @@ import (
 	"github.com/valyala/fasthttp"
 	"go-api-gateway/entities"
 	"go-api-gateway/middlewares"
-	"net"
 	"time"
 )
 
@@ -65,9 +64,7 @@ func prepareRequest(ctx *fasthttp.RequestCtx, route *entities.Route) {
 		ctx.Request.Header.Del(h)
 	}
 	ctx.Request.SetHost(route.Origin)
-	if ip, _, err := net.SplitHostPort(ctx.RemoteAddr().String()); err == nil { //todo: remove alloc
-		ctx.Request.Header.Add("X-Forwarded-For", ip)
-	}
+	ctx.Request.Header.Add("X-Forwarded-For", ctx.RemoteIP().String())
 }
 
 func postprocessResponse(resp *fasthttp.Response) {
