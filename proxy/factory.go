@@ -75,6 +75,7 @@ func postprocessResponse(resp *fasthttp.Response) {
 
 var headersToblock = []string{
 	"Connection",          // Connection
+	"Server",              // Server
 	"Proxy-Connection",    // non-standard but still sent by libcurl and rejected by e.g. google
 	"Keep-Alive",          // Keep-Alive
 	"Proxy-Authenticate",  // Proxy-Authenticate

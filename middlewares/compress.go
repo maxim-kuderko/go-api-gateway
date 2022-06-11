@@ -16,6 +16,6 @@ func compress(cfg json.RawMessage) func(handler fasthttp.RequestHandler) fasthtt
 		logrus.Fatal(err)
 	}
 	return func(handler fasthttp.RequestHandler) fasthttp.RequestHandler {
-		return fasthttp.CompressHandlerLevel(handler, config.Level)
+		return fasthttp.CompressHandlerBrotliLevel(handler, config.Level, config.Level)
 	}
 }
