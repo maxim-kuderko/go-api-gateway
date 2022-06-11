@@ -63,6 +63,9 @@ func registerExternal() {
 		if !ok {
 			logrus.Fatalf("error while calling Middleware function in plugin %s, error: %s", entry.Name(), reflect.TypeOf(ml))
 		}
+		if _, ok := registry[name()]; ok {
+			logrus.Fatalf("middleware %s already exists", name())
+		}
 		registry[name()] = middleware
 	}
 }
