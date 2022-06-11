@@ -13,6 +13,7 @@ func Middleware(settings json.RawMessage) func(handler fasthttp.RequestHandler) 
 	return func(handler fasthttp.RequestHandler) fasthttp.RequestHandler {
 		return func(ctx *fasthttp.RequestCtx) {
 			ctx.Request.Header.Add(Name(), `Custom-Value`)
+			handler(ctx)
 		}
 	}
 }

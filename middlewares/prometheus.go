@@ -20,23 +20,26 @@ type prometheusConfig struct {
 	HistogramBuckets []float64 `json:"histogram_buckets"`
 }
 
-func prometheusMonitor(cfg json.RawMessage) func(handler fasthttp.RequestHandler) fasthttp.RequestHandler {
-	var config *prometheusConfig
-	if err := json.Unmarshal(cfg, &config); err != nil {
-		logrus.Fatal(err)
-	}
-	http.Handle(config.Path, promhttp.Handler())
-	go http.ListenAndServe(fmt.Sprintf(":%s", config.Port), nil)
-	reqDuration := prometheus.NewHistogramVec(
-		prometheus.HistogramOpts{
-			Name:    "request_duration_seconds",
-			Help:    "The HTTP request duration in seconds.",
-			Buckets: config.HistogramBuckets,
-		},
-		[]string{"status_code", "method", "path"},
-	)
-	prometheus.MustRegister(reqDuration)
+var reqDuration *prometheus.HistogramVec
 
+func prometheusMonitor(cfg json.RawMessage) func(handler fasthttp.RequestHandler) fasthttp.RequestHandler {
+	if reqDuration == nil {
+		var config *prometheusConfig
+		if err := json.Unmarshal(cfg, &config); err != nil {
+			logrus.Fatal(err)
+		}
+		http.Handle(config.Path, promhttp.Handler())
+		go http.ListenAndServe(fmt.Sprintf(":%s", config.Port), nil)
+		reqDuration = prometheus.NewHistogramVec(
+			prometheus.HistogramOpts{
+				Name:    "request_duration_seconds",
+				Help:    "The HTTP request duration in seconds.",
+				Buckets: config.HistogramBuckets,
+			},
+			[]string{"status_code", "method", "path"},
+		)
+		prometheus.MustRegister(reqDuration)
+	}
 	return func(handler fasthttp.RequestHandler) fasthttp.RequestHandler {
 		return func(ctx *fasthttp.RequestCtx) {
 			t := time.Now()
