@@ -19,7 +19,7 @@ type jwtConfig struct {
 	ParsedTokenHeader string `json:"parsed_token_header"`
 }
 
-func jwtAuth(cfg json.RawMessage) Middleware {
+func jwtAuth(cfg json.RawMessage) func(handler fasthttp.RequestHandler) fasthttp.RequestHandler {
 	var config *jwtConfig
 	if err := json.Unmarshal(cfg, &config); err != nil {
 		logrus.Fatal(err)

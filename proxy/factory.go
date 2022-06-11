@@ -43,7 +43,7 @@ func getHandler(v *viper.Viper, route *entities.Route, client *fasthttp.HostClie
 }
 
 func buildMiddlewares(route *entities.Route, cfg *entities.Config, handler fasthttp.RequestHandler) fasthttp.RequestHandler {
-	middleWaresArr := make([]middlewares.Middleware, 0, len(route.Middlewares)+len(cfg.DefaultMiddlewares))
+	middleWaresArr := make([]func(handler fasthttp.RequestHandler) fasthttp.RequestHandler, 0, len(route.Middlewares)+len(cfg.DefaultMiddlewares))
 	unique := map[string]bool{}
 	allMiddlewareConfigs := append(route.Middlewares, cfg.DefaultMiddlewares...)
 	for _, m := range allMiddlewareConfigs {
