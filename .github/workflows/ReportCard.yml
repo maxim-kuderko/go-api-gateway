@@ -25,3 +25,5 @@ jobs:
         uses: github/codeql-action/autobuild@v2
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
+      - name: Report Card
+        uses: creekorful/goreportcard-action@v1.0
