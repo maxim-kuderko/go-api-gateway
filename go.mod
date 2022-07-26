@@ -3,7 +3,7 @@ module go-api-gateway
 go 1.18
 
 require (
-	github.com/fasthttp/router v1.4.10
+	github.com/fasthttp/router v1.4.11
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/prometheus/client_golang v1.12.2
 	github.com/savsgio/gotils v0.0.0-20220530130905-52f3993e8d6d
